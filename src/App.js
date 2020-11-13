@@ -52,7 +52,7 @@ function App() {
     }
 
     // Is this a valid link between any found titles?
-    const foundLinks = await findLinks(movieList, movieId);
+    const foundLinks = await findLinks([...targetMovies, ...movieList], movieId);
     const isValidLink = foundLinks.length > 0;
 
     if (!isValidLink) {

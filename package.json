@@ -46,9 +46,6 @@
     "nodemon": "^2.0.6"
   },
   "nodemonConfig": {
-      "watch": "server.js",
-    "events": {
-      "restart": "osascript -e 'display notification \"app restarted\" with title \"nodemon\"'"
-    }
+      "watch": ["server.js", "movie-db.js"]
   }
 }

@@ -21,14 +21,14 @@ export default function TargetMovies(props) {
   const [randomMovies, setRandomMovies] = useState(null);
   useEffect(() => {
     getRandomPair(setRandomMovies);
-  });
+  }, []);
 
   const randomA = (newMovie = randomMovies[0]) =>
     setTargetMovies([newMovie, targetMovies[1]]);
   const randomB = (newMovie = randomMovies[1]) =>
     setTargetMovies([targetMovies[0], newMovie]);
 
-  const randoms = [randomA, randomB];
+  const randomHandlers = [randomA, randomB];
 
   return (
     <section>
@@ -37,7 +37,7 @@ export default function TargetMovies(props) {
         {targetMovies.map((movie, i) => (
           <p>
             <MovieCard movie={movie} />
-            <button onClick={() => randoms[i]()}>Random movie</button>
+            <button onClick={() => randomHandlers[i]()}>Random movie</button>
           </p>
         ))}
       </div>

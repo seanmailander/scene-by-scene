@@ -11,7 +11,7 @@ export const getDetails = async (movieId) => {
   }
 };
 
-export const findLinks = async (movieList, newMovie) => {
+export const findLinks = async (movieList, newId) => {
   try {
     const response = await fetch("/links", {
       method: "POST",
@@ -19,8 +19,8 @@ export const findLinks = async (movieList, newMovie) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        movieList,
-        newMovie,
+        knownIds: movieList.map(({ id }) => id),
+        newId,
       }),
     });
 

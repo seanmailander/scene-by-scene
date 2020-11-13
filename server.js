@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const movieDb = require("./movie-db.js");
+
 const app = express();
 app.set("port", process.env.PORT || 3001);
 
@@ -11,11 +13,8 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(bodyParser.json());
 
-app.get("/details", (req, res) => {
+app.get("/details", async (req, res) => {
   const { id } = req.query;
-
-  console.debug(req.query);
-
   if (!id) {
     res.json({
       error: "Missing required parameter `id`",
@@ -24,34 +23,24 @@ app.get("/details", (req, res) => {
   }
 
   // Get movie details
-  const movieDetails = {
-    id,
-    title: "A very good movie",
-  };
+  const movieDetails = await movieDb.getDetails(id);
 
   res.json(movieDetails);
 });
 
-app.post("/links", (req, res) => {
-  const { movieList, newMovie } = req.body;
+app.post("/links", async (req, res) => {
+  //{"knownIds":[13,45],"newId":1}
+  const { knownIds, newId } = req.body;
 
-  console.debug(req.body);
-
-  if (!movieList || !newMovie) {
-    res.json({
-      error: "Missing required parameters `movieList` and `newMovie`",
-    });
-    return;
-  }
-  // Get set of movie IDs that
-  const foundLinks = [1, 2];
+  // Get set of movie IDs that link to the newId
+  const foundLinks = await movieDb.findLinks(knownIds, newId);
 
   res.json(foundLinks);
 });
 
-app.post("/randomPair", (req, res) => {
+app.post("/randomPair", async (req, res) => {
   // Get random pair of movie IDs
-  const randomPair = [13, 45];
+  const randomPair = await movieDb.randomPair();
 
   res.json(randomPair);
 });
