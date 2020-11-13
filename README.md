@@ -4,8 +4,8 @@ Find relationships between movies through a network of co-stars
 
 ## NOW-TODOs
 
-- [ ] show start and end
-- [ ] add discovered movies
+- [x] show start and end
+- [x] add discovered movies
 - [ ] find links between movies
 - [ ] only add linked movies
 - [ ] randomize start and end

@@ -24,7 +24,7 @@
     justify-content: space-between;
 }
 
-.target-list > p {
+.target-list > p, .movie-list .movie {
     border: 1px solid grey;
     margin: 10px;
 }
