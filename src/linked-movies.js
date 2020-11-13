@@ -1,9 +1,9 @@
 export default function LinkedMovies(props) {
   const { targetMovies = [], movieList = [] } = props;
 
-  return targetMovies.length === 2 ? (
+  return targetMovies.filter(m => !!m).length === 2 ? (
     <section>
-      Linked movies
+      { movieList.length > 0 ? "Linked movies" : null }
       <div className="movie-list">
         {movieList.map((movie) => (
           <p>{movie}</p>

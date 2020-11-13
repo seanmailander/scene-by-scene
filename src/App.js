@@ -6,31 +6,46 @@ import LinkedMovies from "./linked-movies";
 
 function App() {
   // The past
-  const [targetMovies, setTargetMovies] = useState([]);
+  const [targetMovies, setTargetMovies] = useState([null, null]);
   const [movieList, setMovieList] = useState([]);
 
   const addToMovieList = (event) => {
+    // Get useful stuff from DOM
     event.preventDefault();
     const textInput = event.target["movie-title"];
     const newMovie = textInput.value;
-    if (targetMovies.length < 2) {
-      setTargetMovies([...targetMovies, newMovie]);
-      event.target.reset();
+    const clearInput = () => event.target.reset();
+
+    // Okay, so what do we do with it?
+
+    // If we dont yet have two titles, add this to one of the targets
+    // TODO: make the targets "pickable" rather than free-text
+    if (targetMovies.filter((m) => !!m).length < 2) {
+      const appendedToNonNull = [...targetMovies.filter((m) => !!m), newMovie];
+      const alwaysLengthOfTWo =
+        appendedToNonNull.length < 2
+          ? [...appendedToNonNull, null]
+          : appendedToNonNull;
+      setTargetMovies(alwaysLengthOfTWo);
+      clearInput();
       return;
     }
 
     setMovieList([...movieList, newMovie]);
-    event.target.reset();
+    clearInput();
   };
 
   return (
     <div className="App">
       <header className="App-header">
-          Scene by Scene
-          <br />
-          <small>Find the link between two movies</small>
+        Scene by Scene
+        <br />
+        <small>Find the link between two movies</small>
       </header>
-      <TargetMovies targetMovies={targetMovies} />
+      <TargetMovies
+        targetMovies={targetMovies}
+        setTargetMovies={setTargetMovies}
+      />
 
       <LinkedMovies targetMovies={targetMovies} movieList={movieList} />
 

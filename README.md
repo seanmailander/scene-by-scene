@@ -25,3 +25,7 @@ Find relationships between movies through a network of co-stars
 
 - [ ] add pretty visual layout
 - [ ] add "springy" feeling to layout changes
+- [ ] show "unknown" principals for new titles  (3 hovering shadow-profiles)
+- [ ] show "known" principals
+- [ ] only turn on server when someone is using it
+- [ ] only allow trusted people
