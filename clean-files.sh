@@ -41,32 +41,41 @@
 # self
 # writer
 
+set -x 
 # Only get entries from the "movie" category
-awk 'BEGIN { FS = "\t" } ; $2 == "movie" { print $1 "\t" $3}' title.basics.tsv > title.basics.slim.tsv
+# awk 'BEGIN { FS = "\t" } ; $2 == "movie" { print $1 "\t" $3}' raw_files/title.basics.tsv > raw_files/title.basics.slim.tsv
+# sed "s/\"/'/g" raw_files/title.basics.slim.tsv > filtered_files/title.basics.slim.tsv
+
+head -n3 filtered_files/title.basics.slim.tsv
+
 
 # Extract the title identifiers
-awk 'BEGIN { FS = "\t" } ; { print $1 }' title.basics.slim.tsv > title.basics.ids.tsv
+# awk 'BEGIN { FS = "\t" } ; { print $1 }' title.basics.slim.tsv > title.basics.ids.tsv
 
 # Find any principals from these titles
-awk -v FS="\t" '
-    NR == FNR {Ids[$0]; next; }
-    $1 in Ids
-' title.basics.ids.tsv title.principals.tsv > title.principals.matchingids.tsv
+# awk -v FS="\t" '
+#     NR == FNR {Ids[$0]; next; }
+#     $1 in Ids
+# ' title.basics.ids.tsv title.principals.tsv > title.principals.matchingids.tsv
 
 # Get only roles we care about
-awk 'BEGIN { FS = "\t" } ; ($4 == "actor" || $4 == "actress" || $4 == "composer" || $4 == "director" || $4 == "self") { print $1 "\t" $3 "\t" $4}' title.principals.matchingids.tsv > title.principals.filtered.tsv
+# awk 'BEGIN { FS = "\t" } ; ($4 == "actor" || $4 == "actress" || $4 == "composer" || $4 == "director" || $4 == "self") { print $1 "\t" $3 "\t" $4}' title.principals.matchingids.tsv > title.principals.filtered.tsv
 
 # Get the name identifier
-awk 'BEGIN { FS = "\t" } ; { print $2 }' title.principals.filtered.tsv > title.principals.ids.tsv
+# awk 'BEGIN { FS = "\t" } ; { print $2 }' title.principals.filtered.tsv > title.principals.ids.tsv
 
 # Unique the name identifiers
-sort -u -o title.principals.ids.tsv{,}
+# sort -u -o title.principals.ids.tsv{,}
 
 # Find these names
-awk -v FS="\t" '
-    NR == FNR {Ids[$0]; next; }
-    $1 in Ids
-' title.principals.ids.tsv name.basics.tsv > name.basics.matchingids.tsv
+# awk -v FS="\t" '
+#     NR == FNR {Ids[$0]; next; }
+#     $1 in Ids
+# ' title.principals.ids.tsv name.basics.tsv > name.basics.matchingids.tsv
 
 # Slim these names
-awk 'BEGIN { FS = "\t" } ; { print $1 "\t" $2 "\t" $6}' name.basics.matchingids.tsv > name.basics.slim.tsv
+awk 'BEGIN { FS = "\t" } ; { print $1 "\t" $2 "\t" $6}' raw_files/name.basics.matchingids.tsv > raw_files/name.basics.slim.tsv
+sed "s/\"/'/g" raw_files/name.basics.slim.tsv > filtered_files/name.basics.slim.tsv
+
+
+head -n3 filtered_files/name.basics.slim.tsv

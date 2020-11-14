@@ -1,0 +1,40 @@
+version: "3"
+services:
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "6379:6379"
+    command: redis-server --bind 0.0.0.0
+
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+
+  redis-setup:
+    container_name: redis-setup
+    hostname: redis-setup
+    image: redis
+    depends_on:
+      - redis
+    volumes:
+      - ./:/data
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    restart: "no"
+    entrypoint:
+      ["bash", "/data/load-data.sh"]
+    # entrypoint: [ "bash", "cat /mydata/data.txt | redis-cli --pipe"]

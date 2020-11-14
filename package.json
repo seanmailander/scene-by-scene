@@ -11,16 +11,25 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
+    "redis": "^3.0.2",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start-both": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon server.js",
+    "server": "nodemon server/server.js",
     "client": "node start-client.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test-server": "jest server/*",
+    "test-client": "jest src/*",
     "eject": "react-scripts eject"
+  },
+  "jest": {
+    "roots": [
+      "src",
+      "server"
+    ],
+    "testTimeout": 10000
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +55,8 @@
     "nodemon": "^2.0.6"
   },
   "nodemonConfig": {
-      "watch": ["server.js", "movie-db.js"]
+    "watch": [
+      "server/*.js"
+    ]
   }
 }
