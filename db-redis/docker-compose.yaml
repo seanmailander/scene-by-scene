@@ -13,7 +13,6 @@ services:
       - "6379:6379"
     command: redis-server --bind 0.0.0.0
 
-
   redis-commander:
     container_name: redis-commander
     hostname: redis-commander
@@ -35,6 +34,4 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     restart: "no"
-    entrypoint:
-      ["bash", "/data/load-data.sh"]
-    # entrypoint: [ "bash", "cat /mydata/data.txt | redis-cli --pipe"]
+    entrypoint: /data/load-data.sh

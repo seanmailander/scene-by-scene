@@ -1,0 +1,31 @@
+version: "3.1"
+services:
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb-inmemory
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_DATABASE: sample_db
+    ports:
+      - 27017:27017
+
+  mongoclient:
+    image: mongoclient/mongoclient:latest
+    container_name: mongoclient
+    hostname: mongoclient
+    depends_on:
+      - mongodb
+    ports:
+      - 3300:3000
+    environment:
+      MONGO_URL: mongodb://root:example@mongodb:27017
+
+  mongo_seed:
+    image: mongo:4.4
+    links:
+      - mongodb
+    volumes:
+      - ./:/seeddata
+    command: /seeddata/import.sh
