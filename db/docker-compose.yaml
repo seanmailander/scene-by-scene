@@ -31,7 +31,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - ./:/data
+      - ./data:/data
     environment:
       - REDIS_HOSTS=local:redis:6379
     restart: "no"

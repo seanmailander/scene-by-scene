@@ -24,3 +24,5 @@ yarn-error.log*
 
 raw_files/
 filtered_files/
+
+db/data/
