@@ -22,7 +22,7 @@ function App() {
     // Okay, so what do we do with it?
 
     // TODO: validate its actually a valid movie title
-    const movieId = 1;
+    const movieId = "tt0000630";
     const isValidMovieTitle = true;
 
     // Otherwise show a hint or failure
