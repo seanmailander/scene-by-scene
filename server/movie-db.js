@@ -84,9 +84,11 @@ const findLinks = async (knownIds, newId) => {
 
 const randomPair = async () => {
   // TODO: get pair from file
-  const randomPair = ["tt0000630", "tt0001038"];
+  const { titlesCollection } = await getMongoCollections();
+  const randomPair = await titlesCollection.aggregate([{ $sample: { size: 2 } }]).toArray(); //["tt0000630", "tt0078915"];
 
-  return randomPair;
+  const titles = randomPair.map(({ title }) => title);
+  return titles;
 };
 
 const closeInstance = async () => {
