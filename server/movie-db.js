@@ -1,8 +1,31 @@
-const util = require("util");
-const redis = require("redis");
-const client = redis.createClient();
+const MongoClient = require("mongodb").MongoClient;
 
-const setMembers = util.promisify(client.smembers).bind(client);
+// Connection URL
+const url = "mongodb://root:example@localhost:27017";
+
+// Database Name
+const dbName = "admin";
+
+let client = undefined;
+const getMongoCollections = async () => {
+  if (!client) {
+    // Create a new MongoClient
+    client = new MongoClient(url);
+    await client.connect();
+  }
+
+  const db = client.db(dbName);
+  const titlesCollection = db.collection("titles");
+  const principalsCollection = db.collection("principals");
+  const principalsByTitleCollection = db.collection("principalsbytitle");
+  const titlesByPrincipal = db.collection("titlesbyprincipal");
+  return {
+    titlesCollection,
+    principalsCollection,
+    principalsByTitleCollection,
+    titlesByPrincipal,
+  };
+};
 
 const getDetails = async (id) => {
   //TODO: read from file by id: "tt0001038"
@@ -15,9 +38,17 @@ const getDetails = async (id) => {
 
 const lookupPrincipalsByTitle = async (tt) => {
   // Get all principles for this title
-  const principals = await setMembers(`principals-by-title.${tt}`);
+  const { principalsByTitleCollection } = await getMongoCollections();
+  const principalsByTitle = await principalsByTitleCollection
+    .find({ title: tt })
+    .limit(1)
+    .toArray();
 
-  return new Set(principals);
+  const extractedPrinciples = principalsByTitle.map(
+    ({ principals }) => principals
+  );
+
+  return new Set(extractedPrinciples[0]);
 };
 
 const findLinks = async (knownIds, newId) => {
@@ -43,7 +74,9 @@ const findLinks = async (knownIds, newId) => {
 
   // Find any matches
   const matchedKnownIds = principalsByTitle
-    .filter(({ nms }) => [...nms].filter((nm) => newPrincipals.has(nm)).length > 0)
+    .filter(
+      ({ nms }) => [...nms].filter((nm) => newPrincipals.has(nm)).length > 0
+    )
     .map(({ tt }) => tt);
 
   return matchedKnownIds;
@@ -56,13 +89,13 @@ const randomPair = async () => {
   return randomPair;
 };
 
-const closeInstance = () => {
-    client.quit();
-}
+const closeInstance = async () => {
+  await client.close();
+};
 
 module.exports = {
   getDetails,
   findLinks,
   randomPair,
-  closeInstance
+  closeInstance,
 };
