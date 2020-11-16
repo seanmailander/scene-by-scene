@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const movieDb = require("./movie-db.js");
+const { searchMoviesByTitle } = require("./movie-db.js");
 
 const app = express();
 app.set("port", process.env.PORT || 3001);
@@ -24,6 +25,21 @@ app.get("/details", async (req, res) => {
 
   // Get movie details
   const movieDetails = await movieDb.getDetails(id);
+
+  res.json(movieDetails);
+});
+
+app.get("/search", async (req, res) => {
+  const { search } = req.query;
+  if (!search) {
+    res.json({
+      error: "Missing required parameter `search`",
+    });
+    return;
+  }
+
+  // Get movie details
+  const movieDetails = await movieDb.searchMoviesByTitle(search);
 
   res.json(movieDetails);
 });

@@ -11,6 +11,19 @@ export const getDetails = async (movieId) => {
   }
 };
 
+export const search = async (search) => {
+  try {
+    const response = await fetch(`/search?search=${search}`);
+
+    const foundTitles = await response.json();
+
+    return foundTitles;
+  } catch (e) {
+    console.debug(e);
+    return null;
+  }
+};
+
 export const findLinks = async (movieList, newId) => {
   try {
     const response = await fetch("/links", {

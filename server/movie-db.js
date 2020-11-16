@@ -43,6 +43,21 @@ const getDetails = async (tt) => {
   return movieDetails;
 };
 
+
+const searchMoviesByTitle = async (search) => {
+    const { titlesCollection } = await getMongoCollections();
+    const title = await titlesCollection
+      .find({ name: search })
+      .limit(1)
+      .toArray();
+  
+      const foundMovie = title.length === 1 ? title[0] : null;
+      if (foundMovie) {
+          return foundMovie.title;
+      }
+      return null;
+  };
+
 const lookupPrincipalsByTitle = async (tt) => {
   // Get all principles for this title
   const { principalsByTitleCollection } = await getMongoCollections();
@@ -104,6 +119,7 @@ const closeInstance = async () => {
 
 module.exports = {
   getDetails,
+  searchMoviesByTitle,
   findLinks,
   randomPair,
   closeInstance,

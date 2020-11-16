@@ -4,7 +4,7 @@ import "./App.css";
 import TargetMovies from "./target-movies";
 import LinkedMovies from "./linked-movies";
 
-import { findLinks } from "./services";
+import { findLinks, search } from "./services";
 
 function App() {
   // The past
@@ -21,12 +21,10 @@ function App() {
 
     // Okay, so what do we do with it?
 
-    // TODO: validate its actually a valid movie title
-    const movieId = movieTitle;
-    const isValidMovieTitle = true;
-
-    // Otherwise show a hint or failure
-    if (!isValidMovieTitle) {
+    // Do we have a matching title?
+    const movieId = await search(movieTitle);
+    if (!movieId) {
+      // Otherwise show a hint or failure
       setWarning("Title not found");
       return;
     }
@@ -51,7 +49,10 @@ function App() {
     }
 
     // Is this a valid link between any found titles?
-    const foundLinks = await findLinks([...targetMovies, ...movieList], movieId);
+    const foundLinks = await findLinks(
+      [...targetMovies, ...movieList],
+      movieId
+    );
     const isValidLink = foundLinks.length > 0;
 
     if (!isValidLink) {
