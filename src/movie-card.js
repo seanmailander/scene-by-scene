@@ -21,7 +21,7 @@ export default function MovieCard(props) {
     getMovieDetails(id, setMovieDetails);
   }, [id]);
 
-  const { title } = movieDetails;
+  const { title, thumbnail } = movieDetails;
 
   const nullMovie = (
     <div>
@@ -34,6 +34,7 @@ export default function MovieCard(props) {
     nullMovie
   ) : (
     <div className="movie">
+    <img src={thumbnail} alt="thumbnail"></img>
       <p>
         {title}
       </p>

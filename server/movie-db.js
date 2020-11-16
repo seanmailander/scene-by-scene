@@ -1,76 +1,135 @@
-const MongoClient = require("mongodb").MongoClient;
+const fetch = require("node-fetch");
+require("dotenv").config();
 
 // Connection URL
-const url = "mongodb://root:example@localhost:27017";
+const tmdbBaseURL = "https://api.themoviedb.org/3";
 
-// Database Name
-const dbName = "admin";
+let tmdbClient = undefined;
 
-let client = undefined;
-const getMongoCollections = async () => {
-  if (!client) {
-    // Create a new MongoClient
-    client = new MongoClient(url);
-    await client.connect();
+const randomInArray = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const getTMDBClient = async () => {
+  if (tmdbClient) {
+    return tmdbClient;
   }
 
-  const db = client.db(dbName);
-  const titlesCollection = db.collection("titles");
-  const principalsCollection = db.collection("principals");
-  const principalsByTitleCollection = db.collection("principalsbytitle");
-  const titlesByPrincipal = db.collection("titlesbyprincipal");
-  return {
-    titlesCollection,
-    principalsCollection,
-    principalsByTitleCollection,
-    titlesByPrincipal,
+  const authToken = process.env.TMDB_AUTH_TOKEN;
+
+  const config = async () => {
+    const response = await fetch(`${tmdbBaseURL}/configuration`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+
+    const { images } = await response.json();
+
+    return images;
   };
+
+  const imageConfig = await config();
+  const buildImageURI = (path) => {
+    const { secure_base_url, poster_sizes } = imageConfig;
+    return [secure_base_url, poster_sizes[1], path].join("");
+  };
+
+  const search = async (query) => {
+    const response = await fetch(
+      `${tmdbBaseURL}/search/movie?query=${encodeURIComponent(query)}`,
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    );
+
+    const { results } = await response.json();
+
+    return results[0].id;
+  };
+
+  const castAndCrew = async (id) => {
+    const response = await fetch(`${tmdbBaseURL}/movie/${id}/credits`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+
+    const { cast, crew } = await response.json();
+    const directors = crew.filter(({ job }) => job === "Director");
+    const principals = [
+      ...cast.map(({ id }) => id),
+      ...directors.map(({ id }) => id),
+    ];
+
+    return principals;
+  };
+  const findByIMDB = async (id) => {
+    const response = await fetch(
+      `${tmdbBaseURL}/find/${id}?external_source=imdb_id`,
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    );
+
+    const { movie_results } = await response.json();
+    const foundId = movie_results.map(({ id }) => id).find(() => true);
+
+    return foundId;
+  };
+
+  const random = async () => {
+    const response = await fetch(`${tmdbBaseURL}/trending/movie/day`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+
+    const { results } = await response.json();
+    const { id } = randomInArray(results);
+
+    return id;
+  };
+
+  const details = async (id) => {
+    const response = await fetch(`${tmdbBaseURL}/movie/${id}`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+
+    const { title, poster_path } = await response.json();
+    const thumbnail = buildImageURI(poster_path);
+
+    return {
+      title,
+      thumbnail,
+    };
+  };
+
+  return (tmdbClient = {
+    castAndCrew,
+    details,
+    findByIMDB,
+    random,
+    search,
+  });
 };
 
 const getDetails = async (tt) => {
-  //TODO: read from file by id: "tt0001038"
-
-  const { titlesCollection } = await getMongoCollections();
-  const title = await titlesCollection
-    .find({ title: tt })
-    .limit(1)
-    .toArray();
+  const { details } = await getTMDBClient();
+  const response = await details(tt);
 
   const movieDetails = {
-    id: tt,
-    title: title[0].name,
+    title: response.title,
+    thumbnail: response.thumbnail,
   };
   return movieDetails;
 };
 
+const searchMoviesByTitle = async (query) => {
+  const { search } = await getTMDBClient();
+  const foundId = await search(query);
 
-const searchMoviesByTitle = async (search) => {
-    const { titlesCollection } = await getMongoCollections();
-    const title = await titlesCollection
-      .find({ name: search })
-      .limit(1)
-      .toArray();
-  
-      const foundMovie = title.length === 1 ? title[0] : null;
-      if (foundMovie) {
-          return foundMovie.title;
-      }
-      return null;
-  };
+  return foundId;
+};
 
 const lookupPrincipalsByTitle = async (tt) => {
   // Get all principles for this title
-  const { principalsByTitleCollection } = await getMongoCollections();
-  const principalsByTitle = await principalsByTitleCollection
-    .find({ title: tt })
-    .limit(1)
-    .toArray();
+  const { castAndCrew } = await getTMDBClient();
+  const principalsByTitle = await castAndCrew(tt);
 
-  const extractedPrinciples = principalsByTitle.map(
-    ({ principals }) => principals
-  );
-
-  return new Set(extractedPrinciples[0]);
+  return new Set(principalsByTitle);
 };
 
 const findLinks = async (knownIds, newId) => {
@@ -79,7 +138,6 @@ const findLinks = async (knownIds, newId) => {
     return [];
   }
   // Get set of movie IDs that link to the newId
-
   // find principals for newId
   const newPrincipals = await lookupPrincipalsByTitle(newId);
 
@@ -105,17 +163,14 @@ const findLinks = async (knownIds, newId) => {
 };
 
 const randomPair = async () => {
-  // TODO: get pair from file
-  const { titlesCollection } = await getMongoCollections();
-  const randomPair = await titlesCollection.aggregate([{ $sample: { size: 2 } }]).toArray(); //["tt0000630", "tt0078915"];
+  const { random } = await getTMDBClient();
+  const randomPair = await Promise.all([random(), random()]);
 
-  const titles = randomPair.map(({ title }) => title);
-  return titles;
+  return randomPair;
 };
 
-const closeInstance = async () => {
-  await client.close();
-};
+// NOOP
+const closeInstance = async () => {};
 
 module.exports = {
   getDetails,
@@ -123,4 +178,5 @@ module.exports = {
   findLinks,
   randomPair,
   closeInstance,
+  getTMDBClient,
 };

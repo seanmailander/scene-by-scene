@@ -3,41 +3,41 @@ const movieDb = require("./movie-db");
 describe("Finding links between movies", () => {
   test("Finds links for all matching targets", async () => {
     // Arrange
-    const knownIds = ["tt0047162", "tt0062225"];
-    const newId = "tt0071442";
+    const knownIds = [57575, 140249];
+    const newId = 93510;
 
     // Act
     const foundLinks = await movieDb.findLinks(knownIds, newId);
 
     // Assert
-    expect(foundLinks).toEqual(["tt0047162", "tt0062225"]);
+    expect(foundLinks).toEqual([57575, 140249]);
   });
   test("Finds links for single matching target", async () => {
     // Arrange
-    const knownIds = ["tt0047162", "tt0199369"];
-    const newId = "tt0071442";
+    const knownIds = [57575, 169666];
+    const newId = 93510;
 
     // Act
     const foundLinks = await movieDb.findLinks(knownIds, newId);
 
     // Assert
-    expect(foundLinks).toEqual(["tt0047162"]);
+    expect(foundLinks).toEqual([57575]);
   });
   test("Finds links in known list", async () => {
     // Arrange
-    const knownIds = ["tt0000630", "tt0078915"];
-    const newId = "tt0078915";
+    const knownIds = [33823, 20007];
+    const newId = 20007;
 
     // Act
     const foundLinks = await movieDb.findLinks(knownIds, newId);
 
     // Assert
-    expect(foundLinks).toEqual(["tt0078915"]);
+    expect(foundLinks).toEqual([20007]);
   });
   test("Finds links for no matching targets", async () => {
     // Arrange
-    const knownIds = ["tt0047162", "tt0199369"];
-    const newId = "tt0071443";
+    const knownIds = [57575, 169666];
+    const newId = 156702;
 
     // Act
     const foundLinks = await movieDb.findLinks(knownIds, newId);
@@ -45,10 +45,10 @@ describe("Finding links between movies", () => {
     // Assert
     expect(foundLinks).toEqual([]);
   });
-  test("Finds no links when no principals", async () => {
+  test.skip("Finds no links when no principals", async () => {
     // Arrange
-    const knownIds = ["tt0001038"];
-    const newId = "tt0001038";
+    const knownIds = [1039, 1040];
+    const newId = 1038;
 
     // Act
     const foundLinks = await movieDb.findLinks(knownIds, newId);
@@ -58,35 +58,34 @@ describe("Finding links between movies", () => {
   });
 });
 
-
 describe("Finding random titles", () => {
-    test("Finds two random titles", async () => {
-      // Arrange
-  
-      // Act
-      const randomPair = await movieDb.randomPair();
-  
-      // Assert
-      expect(randomPair).toHaveLength(2);
-    });
-    test("Finds two distinct random titles", async () => {
-      // Arrange
-  
-      // Act
-      const randomPair = await movieDb.randomPair();
-  
-      // Assert
-      expect(randomPair).toHaveLength(2);
-      expect(randomPair[0]).not.toEqual(randomPair[1]);
-    });
-    test.skip("Finds two distinct random titles that have at least one link", async () => {
-      // Arrange
-  
-      // Act
-      const randomPair = await movieDb.randomPair();
-  
-      // Assert
-      expect(randomPair).toHaveLength(2);
-    });
+  test("Finds two random titles", async () => {
+    // Arrange
+
+    // Act
+    const randomPair = await movieDb.randomPair();
+
+    // Assert
+    expect(randomPair).toHaveLength(2);
+  });
+  test("Finds two distinct random titles", async () => {
+    // Arrange
+
+    // Act
+    const randomPair = await movieDb.randomPair();
+
+    // Assert
+    expect(randomPair).toHaveLength(2);
+    expect(randomPair[0]).not.toEqual(randomPair[1]);
+  });
+  test.skip("Finds two distinct random titles that have at least one link", async () => {
+    // Arrange
+
+    // Act
+    const randomPair = await movieDb.randomPair();
+
+    // Assert
+    expect(randomPair).toHaveLength(2);
+  });
 });
 afterAll(() => movieDb.closeInstance());
