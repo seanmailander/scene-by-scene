@@ -1,6 +1,6 @@
 export const getDetails = async (movieId) => {
   try {
-    const response = await fetch(`/details&id=${movieId}`);
+    const response = await fetch(`/details?id=${movieId}`);
 
     const foundLinks = await response.json();
 

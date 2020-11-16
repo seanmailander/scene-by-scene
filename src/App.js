@@ -37,7 +37,6 @@ function App() {
       // Now add to the list of linked movies
       const newMovie = {
         id: movieId,
-        title: movieTitle,
         links: [],
       };
 

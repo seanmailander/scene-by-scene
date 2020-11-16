@@ -27,11 +27,18 @@ const getMongoCollections = async () => {
   };
 };
 
-const getDetails = async (id) => {
+const getDetails = async (tt) => {
   //TODO: read from file by id: "tt0001038"
+
+  const { titlesCollection } = await getMongoCollections();
+  const title = await titlesCollection
+    .find({ title: tt })
+    .limit(1)
+    .toArray();
+
   const movieDetails = {
-    id,
-    title: "A very good movie",
+    id: tt,
+    title: title[0].name,
   };
   return movieDetails;
 };

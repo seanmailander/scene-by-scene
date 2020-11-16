@@ -9,7 +9,6 @@ async function getRandomPair(setRandomMovies) {
   setRandomMovies(
     result.map((movieId) => ({
       id: movieId,
-      title: "abcd",
       links: [],
     }))
   );
@@ -21,7 +20,7 @@ export default function TargetMovies(props) {
   const [randomMovies, setRandomMovies] = useState(null);
   useEffect(() => {
     getRandomPair(setRandomMovies);
-  }, []);
+  }, [targetMovies]);
 
   const randomA = (newMovie = randomMovies[0]) =>
     setTargetMovies([newMovie, targetMovies[1]]);
