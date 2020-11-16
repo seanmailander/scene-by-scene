@@ -4,7 +4,6 @@ Find relationships between movies through a network of co-stars
 
 ## NOW-TODOs
 
-- [ ] swap IMDB bulk data for real-time TMDB
 - [ ] lookup movie by UPC
 
 ## NEXT-TODOS
@@ -14,7 +13,6 @@ Find relationships between movies through a network of co-stars
 - [ ] add session / loop
 - [ ] use database of movie UPCs
 - [ ] save connections for each session
-- [ ] enable close-corrections of movie titles
 - [ ] enable close-corrections of movie cast
 - [ ] enable camera on mobile device
 - [ ] deploy somewhere
@@ -23,7 +21,6 @@ Find relationships between movies through a network of co-stars
 ## NIRVANA-TODOS
 
 - [ ] add pretty visual layout
-- [ ] add movie thumbnails
 - [ ] add "springy" feeling to layout changes
 - [ ] show "unknown" principals for new titles (3 hovering shadow-profiles)
 - [ ] show "known" principals

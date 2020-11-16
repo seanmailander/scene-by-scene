@@ -81,12 +81,14 @@ function App() {
         <br />
         <small>Find the link between two movies</small>
       </header>
+      <section className="main">
       <TargetMovies
         targetMovies={targetMovies}
         setTargetMovies={setTargetMovies}
       />
 
       <LinkedMovies targetMovies={targetMovies} movieList={movieList} />
+      </section>
 
       <footer>
         <form onSubmit={addToMovieList}>

@@ -1,13 +1,43 @@
+body,
+html {
+  min-height: 100%;
+  height: 100%;
+  width: 100%;
+  --scroll-bar: 0;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  width: 100%;
+}
+
 .App {
-  text-align: center;
-  background-color: #282c34;
+  flex-grow: 1;
+  flex-wrap: nowrap;
+  max-height: 100vh;
+
   display: flex;
   flex-direction: column;
+  text-align: center;
+  background-color: #282c34;
   align-items: center;
   justify-content: center;
   color: white;
   font-size: calc(10px + 2vmin);
-  min-height: 100%;
+}
+
+.App footer {
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.App .main {
+  flex: auto;
+  min-height: 2em;
+  display: flex;
+  flex-wrap: nowrap;
+  position: relative;
 }
 
 .App-header {
@@ -15,16 +45,17 @@
 }
 
 .movie-list {
-    display: flex;
+  display: flex;
 }
 
 .target-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.target-list > p, .movie-list .movie {
-    border: 1px solid grey;
-    margin: 10px;
+.target-list > p,
+.movie-list .movie {
+  border: 1px solid grey;
+  margin: 10px;
 }
