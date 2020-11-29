@@ -52,6 +52,10 @@ html {
   background: rgba(200,200,200,.3);
 }
 
+.reset {
+    float: right;
+}
+
 .movie-list {
   display: flex;
 }
