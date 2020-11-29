@@ -4,13 +4,15 @@ import "./App.css";
 import TargetMovies from "./target-movies";
 import LinkedMovies from "./linked-movies";
 
-import { findLinks, search } from "./services";
+import { getDetails, findLinks, search } from "./services";
 
 function App() {
   // The past
   const [targetMovies, setTargetMovies] = useState([undefined, undefined]);
   const [movieList, setMovieList] = useState([]);
   const [warning, setWarning] = useState(null);
+
+  const hasSelectedTwoMovies = targetMovies.filter((m) => !!m).length === 2;
 
   const addToMovieList = async (event) => {
     // Get useful stuff from DOM
@@ -31,10 +33,15 @@ function App() {
 
     // If we dont yet have two titles, add this to one of the targets
     // TODO: make the targets "pickable" rather than free-text
-    if (targetMovies.filter((m) => !!m).length < 2) {
+    if (!hasSelectedTwoMovies) {
+      // Get some more details
+      const { title, thumbnail } = await getDetails(movieId);
+
       // Now add to the list of linked movies
       const newMovie = {
         id: movieId,
+        title,
+        thumbnail,
         links: [],
       };
 
@@ -60,15 +67,22 @@ function App() {
       return;
     }
 
+    // Get some more details
+    const { title, thumbnail } = await getDetails(movieId);
     // Now add to the list of linked movies
     const newMovie = {
       id: movieId,
-      title: movieTitle,
+      title,
+      thumbnail,
       links: foundLinks,
     };
     setMovieList([...movieList, newMovie]);
     clearInput();
   };
+
+  const helperText = hasSelectedTwoMovies
+    ? `Find the cast who link ${targetMovies[0].id} and ${targetMovies[1].id}`
+    : "Find the link between two movies";
 
   const clearWarning = !!warning ? (
     <button onClick={() => setWarning()}>x</button>
@@ -79,15 +93,15 @@ function App() {
       <header className="App-header">
         Scene by Scene
         <br />
-        <small>Find the link between two movies</small>
+        <small>{helperText}</small>
       </header>
       <section className="main">
-      <TargetMovies
-        targetMovies={targetMovies}
-        setTargetMovies={setTargetMovies}
-      />
+        <TargetMovies
+          targetMovies={targetMovies}
+          setTargetMovies={setTargetMovies}
+        />
 
-      <LinkedMovies targetMovies={targetMovies} movieList={movieList} />
+        <LinkedMovies targetMovies={targetMovies} movieList={movieList} />
       </section>
 
       <footer>

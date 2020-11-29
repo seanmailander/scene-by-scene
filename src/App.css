@@ -33,15 +33,23 @@ html {
 }
 
 .App .main {
+    width: 80%;
   flex: auto;
   min-height: 2em;
   display: flex;
+  flex-direction: column;;
   flex-wrap: nowrap;
   position: relative;
 }
 
+.main section {
+    width: 100%;
+}
+
 .App-header {
-  min-height: 4vh;
+  min-width: 100%;
+  border-bottom: 1px solid grey;
+  background: rgba(200,200,200,.3);
 }
 
 .movie-list {
@@ -56,6 +64,13 @@ html {
 
 .target-list > p,
 .movie-list .movie {
-  border: 1px solid grey;
+  /* border: 1px solid grey; */
   margin: 10px;
+}
+
+footer {
+    border-top: 1px solid grey;
+    background: rgba(200,200,200,.3);
+    padding-bottom: 20px;
+    z-index: 1;
 }

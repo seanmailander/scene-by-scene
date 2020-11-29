@@ -1,37 +1,37 @@
 import React, { useState, useEffect } from "react";
 
 import MovieCard from "./movie-card";
-import { randomPair } from "./services";
+import { getDetails, randomPair } from "./services";
 
-async function getRandomPair(setRandomMovies) {
+async function getRandomPair(setRandomMovie) {
   const result = await randomPair();
 
-  setRandomMovies(
-    result.map((movieId) => ({
-      id: movieId,
-      links: [],
-    }))
-  );
+  // Get some more details
+  const { title, thumbnail } = await getDetails(result[0]);
+
+  setRandomMovie({
+    id: result[0],
+    title,
+    thumbnail,
+    links: [],
+  });
 }
 
 export default function TargetMovies(props) {
   const { targetMovies, setTargetMovies } = props;
 
-  const [randomMovies, setRandomMovies] = useState(null);
+  const [randomMovie, setRandomMovie] = useState(null);
   useEffect(() => {
-    getRandomPair(setRandomMovies);
-  }, [targetMovies]);
+    getRandomPair(setRandomMovie);
+  }, [targetMovies]); // get a new random pair when either change
 
-  const randomA = (newMovie = randomMovies[0]) =>
-    setTargetMovies([newMovie, targetMovies[1]]);
-  const randomB = (newMovie = randomMovies[1]) =>
-    setTargetMovies([targetMovies[0], newMovie]);
+  const randomA = () => setTargetMovies([randomMovie, targetMovies[1]]);
+  const randomB = () => setTargetMovies([targetMovies[0], randomMovie]);
 
   const randomHandlers = [randomA, randomB];
 
   return (
     <section>
-      Target movies
       <div className="target-list">
         {targetMovies.map((movie, i) => (
           <p>

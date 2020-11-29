@@ -1,32 +1,13 @@
-import React, { useState, useEffect } from "react";
-
-import { getDetails } from "./services";
-
-async function getMovieDetails(id, setMovieDetails) {
-  if (!id) {
-    return;
-  }
-  setMovieDetails({});
-  const result = await getDetails(id);
-
-  setMovieDetails(result);
-}
+import React from "react";
 
 export default function MovieCard(props) {
   const { movie = {} } = props;
-  const { id, links } = movie;
-
-  const [movieDetails, setMovieDetails] = useState({});
-  useEffect(() => {
-    getMovieDetails(id, setMovieDetails);
-  }, [id]);
-
-  const { title, thumbnail } = movieDetails;
+  const { id, title, thumbnail } = movie;
 
   const nullMovie = (
     <div>
       <image></image>
-      No movie selected
+      Select a movie
     </div>
   );
 
@@ -34,12 +15,8 @@ export default function MovieCard(props) {
     nullMovie
   ) : (
     <div className="movie">
-    <img src={thumbnail} alt="thumbnail"></img>
-      <p>
-        {title}
-      </p>
-      <p><small>{id}</small></p>
-      <p>{links.length > 0 && <small>Links: {links}</small>}</p>
+      <img src={thumbnail} alt={title} title={`${id}:${title}`}></img>
+      {/* {links.length > 0 && <p>Links: {links}</p>} */}
     </div>
   );
 }

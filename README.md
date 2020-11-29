@@ -5,6 +5,9 @@ Find relationships between movies through a network of co-stars
 ## NOW-TODOs
 
 - [ ] lookup movie by UPC
+- [ ] only add a movie once
+- [ ] search results exclude previous finds
+- [ ] retrieve details once
 
 ## NEXT-TODOS
 
@@ -13,7 +16,7 @@ Find relationships between movies through a network of co-stars
 - [ ] add session / loop
 - [ ] use database of movie UPCs
 - [ ] save connections for each session
-- [ ] enable close-corrections of movie cast
+- [ ] enable close-corrections of movie title
 - [ ] enable camera on mobile device
 - [ ] deploy somewhere
 - [ ] build somewhere

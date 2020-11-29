@@ -2,9 +2,9 @@ export const getDetails = async (movieId) => {
   try {
     const response = await fetch(`/details?id=${movieId}`);
 
-    const foundLinks = await response.json();
+    const details = await response.json();
 
-    return foundLinks;
+    return details;
   } catch (e) {
     console.debug(e);
     return [];
