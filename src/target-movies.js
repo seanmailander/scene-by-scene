@@ -36,7 +36,7 @@ export default function TargetMovies(props) {
         {targetMovies.map((movie, i) => (
           <p>
             <MovieCard movie={movie} />
-            <button onClick={() => randomHandlers[i]()}>Random movie</button>
+            {!(!!movie && !!movie.id) ? <button onClick={() => randomHandlers[i]()}>Random movie</button> : null}
           </p>
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 import TargetMovies from "./target-movies";
@@ -80,13 +80,24 @@ function App() {
     clearInput();
   };
 
-  const helperText = hasSelectedTwoMovies
-    ? `Find the cast who link ${targetMovies[0].id} and ${targetMovies[1].id}`
-    : "Find the link between two movies";
+  const helperText = hasSelectedTwoMovies ? (
+    <React.Fragment>
+      Find the link between <i>{targetMovies[0].title}</i> and{" "}
+      <i>{targetMovies[1].title}</i>
+    </React.Fragment>
+  ) : (
+    "Find the link between two movies"
+  );
 
   const clearWarning = !!warning ? (
     <button onClick={() => setWarning()}>x</button>
   ) : null;
+
+  const newGame = () => {
+    setTargetMovies([undefined, undefined]);
+    setMovieList([]);
+    setWarning(null);
+  };
 
   return (
     <div className="App">
@@ -94,6 +105,10 @@ function App() {
         Scene by Scene
         <br />
         <small>{helperText}</small>
+        {hasSelectedTwoMovies ? <button onClick={newGame} className="reset">
+          <span className="reload">&#x21bb;</span> Reset game
+        </button>
+         : null }
       </header>
       <section className="main">
         <TargetMovies
