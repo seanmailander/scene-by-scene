@@ -7,13 +7,11 @@ Find relationships between movies through a network of co-stars
 - [ ] lookup movie by UPC
 - [ ] only add a movie once
 - [ ] search results exclude previous finds
-- [ ] retrieve details once
 
 ## NEXT-TODOS
 
 - [ ] create instructions
 - [ ] add win condition
-- [ ] add session / loop
 - [ ] use database of movie UPCs
 - [ ] save connections for each session
 - [ ] enable close-corrections of movie title
